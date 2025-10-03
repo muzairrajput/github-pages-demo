@@ -12,43 +12,22 @@
 
   <script>
     (function () {
-      // Strip trailing slash, split into non-empty segments
-      const rawPath = location.pathname.replace(/\/+$/,'');
-      const parts = rawPath.split('/').filter(Boolean); // e.g. ["testhtml","en"] or ["repo","testhtml","en"]
-
-      console.log('[router] pathname:', location.pathname, 'parts:', parts);
-
-      if (parts.length >= 2) {
-        const locale = parts[parts.length - 1];
-        const slug   = parts[parts.length - 2];
-
-        const ok = /^[A-Za-z0-9._-]+$/;
-        if (ok.test(slug) && ok.test(locale)) {
-          // Keep any repo prefix for project pages: /<repo>/...
-          const prefixParts = parts.slice(0, -2); // everything before slug/locale
-          const basePrefix = prefixParts.length ? '/' + prefixParts.join('/') : '';
-
-          const file = `${slug}_${locale}.html`;
-          const target = `${location.origin}${basePrefix}/${file}`;
-          console.log(target);
-
-          console.log('[router] redirecting to', target);
-          location.replace(target);
-          return;
-        } else {
-          console.warn('[router] invalid chars in slug/locale', {slug, locale});
-        }
+      // Expect URLs like: https://.../github-pages-demo/#/dvdkmk/en
+      const basePrefix = '/github-pages-demo';
+      const hash = location.hash.replace(/^#/, '');   // "/dvdkmk/en"
+      const segments = hash.split('/').filter(Boolean); // ["dvdkmk","en"]
+    
+      if (segments.length === 2) {
+        const [slug, locale] = segments;
+        const file = `${slug}_${locale}.html`;
+        const target = `${location.origin}${basePrefix}/${file}`;
+        location.replace(target);
       } else {
-        console.warn('[router] not enough path parts to route', parts);
+        // default landing UI
       }
-
-      // Fallback UI
-      document.body.innerHTML = `
-        <h1>Page not found</h1>
-        <p>Use a path like <code>/&lt;slug&gt;/&lt;locale&gt;</code>, e.g. <code>/term/en</code>.</p>
-      `;
     })();
   </script>
 </body>
 
 </html>
+
