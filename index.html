@@ -29,7 +29,8 @@
           const basePrefix = prefixParts.length ? '/' + prefixParts.join('/') : '';
 
           const file = `${slug}_${locale}.html`;
-          const target = `${location.origin}${basePrefix}/terms/${file}`;
+          const target = `${location.origin}${basePrefix}/${file}`;
+          console.log(target);
 
           console.log('[router] redirecting to', target);
           location.replace(target);
@@ -49,4 +50,5 @@
     })();
   </script>
 </body>
+
 </html>
